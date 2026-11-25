@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bellacan · Consulta Canina</title>
+  <style>
+    :root {
+      --bg-page: #F8F6F2;
+      --bg-card: #FFFFFF;
+      --bg-soft: #F2EFE9;
+      --bg-base: #EEF5F3;
+      --border-base: #C9DFDA;
+      --petrol: #184E59;
+      --petrol-dark: #113941;
+      --petrol-soft: #E5F0F2;
+      --terracotta: #C86D51;
+      --terracotta-dark: #A8553C;
+      --terracotta-soft: #FBECE7;
+      --text-main: #1E292B;
+      --text-muted: #5C6B6E;
+      --border: #E3DFD7;
+      --warn-bg: #FFF6E5;
+      --warn-border: #F2D399;
+      --warn-text: #7A4B00;
+      --radius: 14px;
+      --radius-sm: 10px;
+      --shadow: 0 4px 18px rgba(24, 78, 89, 0.06);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter, Helvetica, Arial, sans-serif;
+      background: var(--bg-page);
+      color: var(--text-main);
+      line-height: 1.5;
+    }
+
+    .app-shell {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 16px 14px 64px;
+    }
+
+    .topbar {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 14px 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .brand-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 12px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-title {
+      font-weight: 700;
+      font-size: 1.08rem;
+      color: var(--petrol);
+      letter-spacing: -0.01em;
+    }
+
+    .brand-sub {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .badge-vr {
+      background: var(--petrol-soft);
+      color: var(--petrol);
+      font-weight: 700;
+      font-size: 0.75rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      border: 1px solid #C6DCE0;
+    }
+
+    .case-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    select, input[type="text"], textarea {
+      width: 100%;
+      font-family: inherit;
+      font-size: 0.94rem;
+      color: var(--text-main);
+      background: var(--bg-card);
+      border: 1px solid #D5CFC4;
+      border-radius: var(--radius-sm);
+      padding: 10px 12px;
+      transition: border-color 0.15s, box-shadow 0.15s;
+    }
+
+    select:focus, input[type="text"]:focus, textarea:focus {
+      outline: none;
+      border-color: var(--petrol);
+      box-shadow: 0 0 0 3px rgba(24, 78, 89, 0.12);
+    }
+
+    textarea {
+      min-height: 76px;
+      resize: vertical;
+    }
+
+    .case-select-wrap {
+      flex: 1 1 190px;
+    }
+
+    button {
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      border: 1px solid #D5CFC4;
+      background: var(--bg-card);
+      color: var(--text-main);
+      padding: 9px 13px;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: background 0.15s, border-color 0.15s, transform 0.05s;
+    }
+
+    button:active {
+      transform: scale(0.99);
+    }
+
+    button:hover {
+      background: var(--bg-soft);
+    }
+
+    .btn-primary {
+      background: var(--petrol);
+      border-color: var(--petrol);
+      color: #FFFFFF;
+    }
+
+    .btn-primary:hover {
+      background: var(--petrol-dark);
+    }
+
+    .btn-terracotta {
+      background: var(--terracotta);
+      border-color: var(--terracotta);
+      color: #FFFFFF;
+    }
+
+    .btn-terracotta:hover {
+      background: var(--terracotta-dark);
+    }
+
+    .btn-ghost-danger {
+      color: #9B2C2C;
+      border-color: #E5B8B8;
+      background: #FFF8F8;
+    }
+
+    .storage-note {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .backup-pill {
+      background: var(--warn-bg);
+      color: var(--warn-text);
+      border: 1px solid var(--warn-border);
+      border-radius: 999px;
+      padding: 4px 10px;
+      font-size: 0.76rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 6px;
+      overflow-x: auto;
+      padding: 4px 2px 10px;
+      scrollbar-width: none;
+    }
+
+    .tabs::-webkit-scrollbar {
+      display: none;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-weight: 600;
+      font-size: 0.9rem;
+      padding: 8px 12px;
+      border-radius: 999px;
+      white-space: nowrap;
+    }
+
+    .tab-btn.active {
+      background: var(--petrol);
+      color: #FFFFFF;
+    }
+
+    .action-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .card-base {
+      background: var(--bg-base);
+      border-color: var(--border-base);
+    }
+
+    .eyebrow {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--petrol);
+      margin-bottom: 4px;
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin: 0 0 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .count-pill {
+      background: var(--petrol-soft);
+      color: var(--petrol);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 2px 9px;
+      border-radius: 999px;
+    }
+
+    .field-group {
+      margin-bottom: 12px;
+    }
+
+    .field-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .field-label {
+      display: block;
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 5px;
+    }
+
+    .diag-item {
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      padding: 12px;
+      margin-top: 10px;
+      background: #FCFBF9;
+    }
+
+    .diag-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .diag-badge {
+      background: var(--terracotta-soft);
+      color: var(--terracotta-dark);
+      font-weight: 700;
+      font-size: 0.85rem;
+      padding: 4px 10px;
+      border-radius: 8px;
+    }
+
+    .strat-row {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      margin-top: 6px;
+      font-size: 0.88rem;
+    }
+
+    .btn-mini {
+      padding: 4px 9px;
+      font-size: 0.78rem;
+      border-radius: 7px;
+    }
+
+    .priority-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: #FCFBF9;
+      margin-top: 8px;
+    }
+
+    .priority-num {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      color: #FFFFFF;
+      font-weight: 700;
+      font-size: 0.82rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 18px 12px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      margin-top: 10px;
+    }
+
+    .footer-note {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      margin-top: 18px;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(17, 36, 40, 0.48);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 14px;
+      z-index: 50;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 540px;
+      max-height: 88vh;
+      overflow-y: auto;
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      padding: 18px;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.22);
+    }
+
+    .chip-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin: 10px 0 14px;
+    }
+
+    .chip-btn {
+      font-size: 0.82rem;
+      padding: 6px 11px;
+      border-radius: 999px;
+      background: var(--bg-soft);
+      border: 1px solid #D6D0C4;
+      color: var(--text-main);
+    }
+
+    .chip-btn.selected {
+      background: var(--petrol);
+      border-color: var(--petrol);
+      color: #FFFFFF;
+    }
+
+    .info-box {
+      background: var(--bg-soft);
+      border-radius: var(--radius-sm);
+      padding: 11px 12px;
+      font-size: 0.84rem;
+      color: var(--text-main);
+      margin-bottom: 12px;
+    }
+
+    .check-option {
+      display: flex;
+      align-items: flex-start;
+      gap: 9px;
+      padding: 8px 10px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 7px;
+      font-size: 0.88rem;
+      cursor: pointer;
+    }
+
+    .check-option input {
+      margin-top: 3px;
+      accent-color: var(--petrol);
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 8px;
+      margin-top: 14px;
+      padding-top: 12px;
+      border-top: 1px solid var(--border);
+    }
+
+    @media print {
+      .action-bar, .tabs, .case-controls, .storage-note, .btn-mini, .modal-backdrop {
+        display: none !important;
+      }
+      body {
+        background: #FFFFFF;
+      }
+      .card {
+        box-shadow: none;
+        break-inside: avoid;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand-row">
+        <div class="brand">
+          <svg width="38" height="38" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+            <circle cx="24" cy="24" r="22" fill="#E5F0F2" stroke="#184E59" stroke-width="1.5"/>
+            <path d="M15 33C15 28.5 17.5 25.5 21 24.5L22.5 19.5C20.5 19 19 17.2 19 15C19 12.5 21 10.5 23.5 10.5C25.6 10.5 27.4 11.9 27.9 13.9C29.7 14.2 31 15.7 31 17.5C31 19.3 29.7 20.8 28 21.1L27 25.5C30 26.8 31.5 29.5 31.5 33H28.5C28.5 30.5 27.2 28.5 25 27.8V33H22.5V28H20.5V33H17.5V28.2C16.5 29.2 16 30.8 16 33H15Z" fill="#184E59"/>
+            <circle cx="33.5" cy="25.5" r="2.6" fill="#C86D51"/>
+          </svg>
+          <div>
+            <div class="brand-title">Bellacan · Consulta Canina</div>
+            <div class="brand-sub">Registro y plan de intervención conductual</div>
+          </div>
+        </div>
+        <span class="badge-vr">VR</span>
+      </div>
+
+      <div class="case-controls">
+        <div class="case-select-wrap">
+          <select id="caseSelect" aria-label="Seleccionar caso"></select>
+        </div>
+        <button type="button" class="btn-primary" id="btnNewCase">+ Nuevo</button>
+        <button type="button" id="btnExportJson">Exportar JSON</button>
+        <button type="button" id="btnImportTrigger">Importar</button>
+        <input type="file" id="importFileInput" accept=".json" style="display:none;" />
+      </div>
+
+      <div class="storage-note">
+        <span id="storageStatus">Guardado automático en este navegador</span>
+        <button type="button" class="backup-pill" id="btnPrintTop">Imprimir / PDF</button>
+      </div>
+    </header>
+
+    <nav class="tabs" role="tablist" aria-label="Secciones del caso">
+      <button type="button" class="tab-btn active" data-tab="mapa">Mapa del caso</button>
+      <button type="button" class="tab-btn" data-tab="plan">Plan de trabajo</button>
+      <button type="button" class="tab-btn" data-tab="ficha">Ficha</button>
+      <button type="button" class="tab-btn" data-tab="cuestionario">Cuestionario</button>
+    </nav>
+
+    <div class="action-bar">
+      <button type="button" class="btn-terracotta" id="btnOpenDiagModal">+ Añadir diagnóstico</button>
+      <button type="button" id="btnPrintBar">Imprimir / PDF</button>
+      <button type="button" class="btn-ghost-danger" id="btnDeleteCase">Borrar caso</button>
+    </div>
+
+    <main id="tabContent"></main>
+
+    <div class="footer-note">
+      Bellacan · Herramienta de trabajo en consulta (prototipo local con respaldo en navegador).
+    </div>
+  </div>
+
+  <div class="modal-backdrop" id="diagModal" role="dialog" aria-modal="true" aria-labelledby="diagModalTitle">
+    <div class="modal">
+      <div class="eyebrow">Catálogo clínico</div>
+      <h2 id="diagModalTitle" style="margin:0 0 6px; font-size:1.15rem;">Añadir diagnóstico y estrategias</h2>
+      <p style="margin:0 0 10px; font-size:0.86rem; color:var(--text-muted);">
+        Elige una categoría del catálogo y marca las estrategias que quieras incorporar al mapa del caso.
+      </p>
+
+      <div class="chip-grid" id="diagChips"></div>
+
+      <div class="info-box" id="diagDetailsBox"></div>
+
+      <div class="field-label">Estrategias que se añadirán</div>
+      <div id="diagStrategiesList"></div>
+
+      <div class="modal-footer">
+        <button type="button" id="btnCloseDiagModal">Cancelar</button>
+        <button type="button" class="btn-primary" id="btnConfirmAddDiag">Añadir al mapa</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "bellacan_consulta_v1";
+
+    const CATALOGO = {
+      "Problema de control": {
+        indicadores: "Dificultades con señales básicas, conductas de demanda, saltos, tirones o excitación elevada.",
+        descartar: "Miedo, ansiedad, frustración persistente, dolor/enfermedad, necesidades no cubiertas y refuerzos involuntarios.",
+        estrategias: [
+          "Evaluar la comunicación entre tutor y perro",
+          "Revisar pautas de aprendizaje y refuerzos involuntarios",
+          "Reforzar en positivo conductas alternativas compatibles",
+          "Aplicar el principio de Premack en rutinas diarias",
+          "Manejo ambiental para evitar ensayos de la conducta no deseada"
+        ]
+      },
+      "Miedo": {
+        indicadores: "Evitación, postura baja, cola recogida, jadeo o bloqueo ante estímulos concretos.",
+        descartar: "Dolor físico, hipersensibilidad sensorial aguda o historial de experiencias aversivas sin manejo.",
+        estrategias: [
+          "Establecer distancia de seguridad y evitar inundación (flooding)",
+          "Desensibilización sistemática gradual bajo umbral",
+          "Contracondicionamiento con refuerzos de alto valor",
+          "Aumentar previsibilidad y espacios seguros de descanso"
+        ]
+      },
+      "Ansiedad por separación": {
+        indicadores: "Malestar al quedarse solo o ante señales previas a la salida: vocalización, destrucción o eliminación.",
+        descartar: "Ansiedad de confinamiento, soledad ocasional sin malestar o patología médica.",
+        estrategias: [
+          "Desensibilizar señales previas a la salida",
+          "Trabajar ausencias progresivas muy por debajo del umbral de estrés",
+          "Desdramatizar entradas y salidas y ofrecer enriquecimiento calmado",
+          "Valorar derivación o interconsulta veterinaria si el malestar es intenso"
+        ]
+      },
+      "Reactividad / Agresividad": {
+        indicadores: "Gruñidos, ladridos intensos, lanzamiento o mordida ante personas, perros o recursos.",
+        descartar: "Dolor, miedo no atendido, defensa de recursos o falta de control de impulsos.",
+        estrategias: [
+          "Priorizar seguridad y manejo preventivo en paseos y entorno",
+          "Aplicar Behavioral Adjustment Training (BAT) o trabajo de orientación",
+          "Contracondicionamiento a distancia segura sin forzar contacto",
+          "Registrar desencadenantes, distancia y nivel de activación"
+        ]
+      },
+      "Ansiedad anticipatoria": {
+        indicadores: "Activación o tensión previa a situaciones predecibles (veterinario, coche, baño, salidas).",
+        descartar: "Fobia consolidada o dolor asociado al contexto.",
+        estrategias: [
+          "Introducir aproximaciones cooperativas y consentimiento",
+          "Asociar pasos intermedios con calma y refuerzo suave",
+          "Reducir presión y prisas antes del evento"
+        ]
+      },
+      "Marcaje / Estereotipia": {
+        indicadores: "Marcaje en interiores o conductas repetitivas sin función aparente.",
+        descartar: "Infección urinaria, celo/esterilización, frustración crónica o falta de estimulación adecuada.",
+        estrategias: [
+          "Descartar primero causa médica con veterinario",
+          "Limpieza enzimática y manejo del espacio",
+          "Canalizar energía mental y olfativa con detección o puzles"
+        ]
+      }
+    };
+
+    function createEmptyCase(name = "Sin nombre") {
+      return {
+        id: "case_" + Date.now() + "_" + Math.random().toString(36).slice(2, 6),
+        name,
+        activeTab: "mapa",
+        motivo: "",
+        objetivo: "",
+        otrasPreocupaciones: "",
+        recomendacionesGenerales: "",
+        diagnosticos: [],
+        prioridades: [],
+        planNotas: "",
+        ficha: {
+          nombrePerro: "",
+          razaEdad: "",
+          tutor: "",
+          revisionVet: ""
+        },
+        cuestionario: {
+          rutinaPaseos: "",
+          desencadenantes: "",
+          recompensaFavorita: ""
+        }
+      };
+    }
+
+    function createDemoCase() {
+      return {
+        id: "case_demo_bella",
+        name: "Caso ejemplo · Excitación y paseo",
+        activeTab: "mapa",
+        motivo: "El perro se acelera mucho al ver otros perros en el paseo y tira con fuerza.",
+        objetivo: "Paseos más tranquilos, mayor conexión con el tutor y gestionar la excitación.",
+        otrasPreocupaciones: "Le cuesta relajarse al volver a casa tras el paseo.",
+        recomendacionesGenerales: "Cuidar horas de sueño, evitar paseos largos en horas de máxima saturación y revisar bienestar físico.",
+        diagnosticos: [
+          {
+            id: "d1",
+            categoria: "Problema de control",
+            estrategias: [
+              "Evaluar la comunicación entre tutor y perro",
+              "Reforzar en positivo conductas alternativas compatibles",
+              "Aplicar el principio de Premack en rutinas diarias"
+            ]
+          }
+        ],
+        prioridades: [
+          "Mantener distancia cómoda al ver otros perros y premiar la mirada al tutor",
+          "Crear rutina de descompresión al entrar en casa"
+        ],
+        planNotas: "Semana 1-2: observación de distancias umbral, paseos olfativos en zonas tranquilas y registro de picos de activación.",
+        ficha: {
+          nombrePerro: "Toby",
+          razaEdad: "Mestizo · 2 años",
+          tutor: "Laura M.",
+          revisionVet: "Al día · sin dolor aparente"
+        },
+        cuestionario: {
+          rutinaPaseos: "3 salidas diarias; la de la tarde es la más activa.",
+          desencadenantes: "Perros que se acercan de frente o corren cerca.",
+          recompensaFavorita: "Trocitos de pavo cocido y juegos olfativos."
+        }
+      };
+    }
+
+    let state = {
+      cases: [],
+      currentCaseId: null,
+      selectedDiagKey: Object.keys(CATALOGO)[0],
+      selectedStrategies: [...CATALOGO[Object.keys(CATALOGO)[0]].estrategias]
+    };
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.cases) && parsed.cases.length > 0) {
+            state.cases = parsed.cases;
+            state.currentCaseId = parsed.currentCaseId || parsed.cases[0].id;
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("No se pudo leer localStorage:", e);
+      }
+      const demo = createDemoCase();
+      const blank = createEmptyCase("Sin nombre");
+      state.cases = [blank, demo];
+      state.currentCaseId = blank.id;
+      saveState();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify({
+          cases: state.cases,
+          currentCaseId: state.currentCaseId
+        }));
+        const now = new Date().toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+        document.getElementById("storageStatus").textContent = `Guardado en este navegador · ${now}`;
+      } catch (e) {
+        document.getElementById("storageStatus").textContent = "Aviso: no se pudo guardar en el navegador";
+      }
+    }
+
+    function getCurrentCase() {
+      return state.cases.find((c) => c.id === state.currentCaseId) || state.cases[0];
+    }
+
+    function escapeHtml(str) {
+      return String(str || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function renderAll() {
+      const current = getCurrentCase();
+
+      const select = document.getElementById("caseSelect");
+      select.innerHTML = state.cases
+        .map((c) => `<option value="${c.id}" ${c.id === current.id ? "selected" : ""}>${escapeHtml(c.name || "Sin nombre")}</option>`)
+        .join("");
+
+      document.querySelectorAll(".tab-btn").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.tab === current.activeTab);
+      });
+
+      const container = document.getElementById("tabContent");
+      if (current.activeTab === "mapa") {
+        container.innerHTML = renderMapaTab(current);
+        bindMapaEvents(current);
+      } else if (current.activeTab === "plan") {
+        container.innerHTML = renderPlanTab(current);
+        bindPlanEvents(current);
+      } else if (current.activeTab === "ficha") {
+        container.innerHTML = renderFichaTab(current);
+        bindFichaEvents(current);
+      } else if (current.activeTab === "cuestionario") {
+        container.innerHTML = renderCuestionarioTab(current);
+        bindCuestionarioEvents(current);
+      }
+    }
+
+    function renderMapaTab(c) {
+      const diagsHtml = c.diagnosticos.length === 0
+        ? `<div class="empty-state">Todavía no hay diagnósticos añadidos. Pulsa <strong>+ Añadir diagnóstico</strong> para empezar.</div>`
+        : c.diagnosticos.map((d, dIdx) => `
+            <div class="diag-item">
+              <div class="diag-header">
+                <span class="diag-badge">${escapeHtml(d.categoria)}</span>
+                <button type="button" class="btn-mini btn-ghost-danger" data-remove-diag="${dIdx}">Quitar</button>
+              </div>
+              ${d.estrategias.map((st, sIdx) => `
+                <div class="strat-row">
+                  <span>${escapeHtml(st)}</span>
+                  <div style="display:flex; gap:5px; flex-shrink:0;">
+                    <button type="button" class="btn-mini btn-primary" data-to-prio="${escapeHtml(st)}" title="Enviar a prioridades">+</button>
+                    <button type="button" class="btn-mini" data-del-strat="${dIdx}:${sIdx}" title="Eliminar estrategia">×</button>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          `).join("");
+
+      const prioHtml = c.prioridades.length === 0
+        ? `<div class="empty-state">Sin prioridades aún. Añade una desde las estrategias o escribe una prioridad abajo.</div>`
+        : c.prioridades.map((p, idx) => `
+            <div class="priority-row">
+              <span class="priority-num">${idx + 1}</span>
+              <input type="text" data-prio-input="${idx}" value="${escapeHtml(p)}" placeholder="Describe la prioridad..." />
+              <button type="button" class="btn-mini" data-move-prio="${idx}:up" ${idx === 0 ? "disabled" : ""}>↑</button>
+              <button type="button" class="btn-mini" data-move-prio="${idx}:down" ${idx === c.prioridades.length - 1 ? "disabled" : ""}>↓</button>
+              <button type="button" class="btn-mini btn-ghost-danger" data-del-prio="${idx}">×</button>
+            </div>
+          `).join("");
+
+      return `
+        <section class="card">
+          <div class="field-group">
+            <label class="field-label" for="caseNameInput">Nombre del caso</label>
+            <input type="text" id="caseNameInput" value="${escapeHtml(c.name)}" placeholder="Ej. Luna · Reactividad en paseo" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="motivoInput">Motivo de consulta</label>
+            <textarea id="motivoInput" placeholder="Qué le preocupa al tutor y qué está pasando">${escapeHtml(c.motivo)}</textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="objetivoInput">Lo que quiere conseguir</label>
+            <input type="text" id="objetivoInput" value="${escapeHtml(c.objetivo)}" placeholder="Objetivo del tutor" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="otrasInput">Otras preocupaciones</label>
+            <input type="text" id="otrasInput" value="${escapeHtml(c.otrasPreocupaciones)}" placeholder="Otras situaciones que le preocupan" />
+          </div>
+        </section>
+
+        <section class="card card-base">
+          <div class="eyebrow">La base · Antes de los diagnósticos</div>
+          <h2 class="card-title" style="margin-bottom:8px;">Recomendaciones generales</h2>
+          <textarea id="recoInput" placeholder="Pautas básicas para el tutor: rutinas, descanso, manejo, revisión veterinaria...">${escapeHtml(c.recomendacionesGenerales)}</textarea>
+        </section>
+
+        <section class="card">
+          <div class="card-title">
+            <span>Diagnósticos y estrategias</span>
+            <span class="count-pill">${c.diagnosticos.length}</span>
+          </div>
+          ${diagsHtml}
+        </section>
+
+        <section class="card">
+          <div class="card-title">
+            <span>Prioridades</span>
+            <span class="count-pill">${c.prioridades.length}</span>
+          </div>
+          <div style="display:flex; gap:8px; margin-bottom:8px;">
+            <input type="text" id="newPriorityInput" placeholder="Escribir una nueva prioridad..." />
+            <button type="button" class="btn-primary" id="btnAddPriority">+ Añadir</button>
+          </div>
+          ${prioHtml}
+        </section>
+      `;
+    }
+
+    function renderPlanTab(c) {
+      const prioList = c.prioridades.length
+        ? `<ol style="margin:8px 0 14px; padding-left:20px;">${c.prioridades.map((p) => `<li style="margin-bottom:6px;">${escapeHtml(p || "Prioridad sin texto")}</li>`).join("")}</ol>`
+        : `<p style="color:var(--text-muted); font-size:0.9rem;">Aún no hay prioridades marcadas en el Mapa del caso.</p>`;
+
+      return `
+        <section class="card">
+          <div class="eyebrow">Intervención estructurada</div>
+          <h2 class="card-title">Plan de trabajo · ${escapeHtml(c.name || "Sin nombre")}</h2>
+          <div class="info-box">
+            <strong>Objetivo principal:</strong> ${escapeHtml(c.objetivo || "Por definir")}<br />
+            <strong>Base general:</strong> ${escapeHtml(c.recomendacionesGenerales || "Sin pautas base anotadas")}
+          </div>
+          <div class="field-label">Orden de prioridades</div>
+          ${prioList}
+          <div class="field-group">
+            <label class="field-label" for="planNotasInput">Pautas y seguimiento por fases</label>
+            <textarea id="planNotasInput" style="min-height:130px;" placeholder="Anota pasos semanales, criterios de avance y observaciones para el tutor...">${escapeHtml(c.planNotas)}</textarea>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderFichaTab(c) {
+      return `
+        <section class="card">
+          <div class="eyebrow">Datos básicos</div>
+          <h2 class="card-title">Ficha del caso</h2>
+          <div class="field-group">
+            <label class="field-label" for="fichaPerro">Nombre del perro</label>
+            <input type="text" id="fichaPerro" value="${escapeHtml(c.ficha.nombrePerro)}" placeholder="Nombre" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="fichaRazaEdad">Raza o mestizaje y edad</label>
+            <input type="text" id="fichaRazaEdad" value="${escapeHtml(c.ficha.razaEdad)}" placeholder="Ej. Caniche · 2 años" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="fichaTutor">Tutor / familia</label>
+            <input type="text" id="fichaTutor" value="${escapeHtml(c.ficha.tutor)}" placeholder="Nombre de referencia" />
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="fichaVet">Salud y revisión veterinaria</label>
+            <textarea id="fichaVet" placeholder="Chequeos recientes, medicación, dolor o sensibilidad física...">${escapeHtml(c.ficha.revisionVet)}</textarea>
+          </div>
+        </section>
+      `;
+    }
+
+    function renderCuestionarioTab(c) {
+      return `
+        <section class="card">
+          <div class="eyebrow">Entrevista previa</div>
+          <h2 class="card-title">Cuestionario inicial</h2>
+          <div class="field-group">
+            <label class="field-label" for="cuestRutina">Rutina diaria y paseos</label>
+            <textarea id="cuestRutina" placeholder="Horarios, duración de salidas, entornos habituales...">${escapeHtml(c.cuestionario.rutinaPaseos)}</textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="cuestDesencadenantes">Situaciones desencadenantes</label>
+            <textarea id="cuestDesencadenantes" placeholder="Cuándo aparece la conducta y qué ocurre justo antes/después...">${escapeHtml(c.cuestionario.desencadenantes)}</textarea>
+          </div>
+          <div class="field-group">
+            <label class="field-label" for="cuestRefuerzos">Refuerzos y motivadores</label>
+            <textarea id="cuestRefuerzos" placeholder="Comida, olfato, juego, contacto...">${escapeHtml(c.cuestionario.recompensaFavorita)}</textarea>
+          </div>
+        </section>
+      `;
+    }
+
+    function bindMapaEvents(c) {
+      const bindText = (id, setter) => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.addEventListener("input", (e) => {
+          setter(e.target.value);
+          saveState();
+          if (id === "caseNameInput") {
+            const opt = document.querySelector(`#caseSelect option[value="${c.id}"]`);
+            if (opt) opt.textContent = e.target.value || "Sin nombre";
+          }
+        });
+      };
+
+      bindText("caseNameInput", (v) => (c.name = v));
+      bindText("motivoInput", (v) => (c.motivo = v));
+      bindText("objetivoInput", (v) => (c.objetivo = v));
+      bindText("otrasInput", (v) => (c.otrasPreocupaciones = v));
+      bindText("recoInput", (v) => (c.recomendacionesGenerales = v));
+
+      document.querySelectorAll("[data-remove-diag]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.removeDiag);
+          c.diagnosticos.splice(idx, 1);
+          saveState();
+          renderAll();
+        });
+      });
+
+      document.querySelectorAll("[data-del-strat]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const [dIdx, sIdx] = btn.dataset.delStrat.split(":").map(Number);
+          c.diagnosticos[dIdx].estrategias.splice(sIdx, 1);
+          saveState();
+          renderAll();
+        });
+      });
+
+      document.querySelectorAll("[data-to-prio]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          c.prioridades.push(btn.dataset.toPrio);
+          saveState();
+          renderAll();
+        });
+      });
+
+      const btnAddPrio = document.getElementById("btnAddPriority");
+      const newPrioInput = document.getElementById("newPriorityInput");
+      if (btnAddPrio && newPrioInput) {
+        const addPrio = () => {
+          const txt = newPrioInput.value.trim();
+          if (!txt) return;
+          c.prioridades.push(txt);
+          newPrioInput.value = "";
+          saveState();
+          renderAll();
+        };
+        btnAddPrio.addEventListener("click", addPrio);
+        newPrioInput.addEventListener("keydown", (e) => {
+          if (e.key === "Enter") addPrio();
+        });
+      }
+
+      document.querySelectorAll("[data-prio-input]").forEach((inp) => {
+        inp.addEventListener("input", () => {
+          const idx = Number(inp.dataset.prioInput);
+          c.prioridades[idx] = inp.value;
+          saveState();
+        });
+      });
+
+      document.querySelectorAll("[data-move-prio]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const [idxStr, dir] = btn.dataset.movePrio.split(":");
+          const idx = Number(idxStr);
+          const target = dir === "up" ? idx - 1 : idx + 1;
+          if (target < 0 || target >= c.prioridades.length) return;
+          const temp = c.prioridades[idx];
+          c.prioridades[idx] = c.prioridades[target];
+          c.prioridades[target] = temp;
+          saveState();
+          renderAll();
+        });
+      });
+
+      document.querySelectorAll("[data-del-prio]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const idx = Number(btn.dataset.delPrio);
+          c.prioridades.splice(idx, 1);
+          saveState();
+          renderAll();
+        });
+      });
+    }
+
+    function bindPlanEvents(c) {
+      const el = document.getElementById("planNotasInput");
+      if (el) {
+        el.addEventListener("input", (e) => {
+          c.planNotas = e.target.value;
+          saveState();
+        });
+      }
+    }
+
+    function bindFichaEvents(c) {
+      const map = [
+        ["fichaPerro", "nombrePerro"],
+        ["fichaRazaEdad", "razaEdad"],
+        ["fichaTutor", "tutor"],
+        ["fichaVet", "revisionVet"]
+      ];
+      map.forEach(([id, key]) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", (e) => {
+            c.ficha[key] = e.target.value;
+            saveState();
+          });
+        }
+      });
+    }
+
+    function bindCuestionarioEvents(c) {
+      const map = [
+        ["cuestRutina", "rutinaPaseos"],
+        ["cuestDesencadenantes", "desencadenantes"],
+        ["cuestRefuerzos", "recompensaFavorita"]
+      ];
+      map.forEach(([id, key]) => {
+        const el = document.getElementById(id);
+        if (el) {
+          el.addEventListener("input", (e) => {
+            c.cuestionario[key] = e.target.value;
+            saveState();
+          });
+        }
+      });
+    }
+
+    function openDiagModal() {
+      renderDiagModalContent();
+      document.getElementById("diagModal").classList.add("open");
+    }
+
+    function closeDiagModal() {
+      document.getElementById("diagModal").classList.remove("open");
+    }
+
+    function renderDiagModalContent() {
+      const keys = Object.keys(CATALOGO);
+      const activeKey = state.selectedDiagKey || keys[0];
+      const item = CATALOGO[activeKey];
+
+      document.getElementById("diagChips").innerHTML = keys
+        .map((k) => `<button type="button" class="chip-btn ${k === activeKey ? "selected" : ""}" data-diag-chip="${escapeHtml(k)}">${escapeHtml(k)}</button>`)
+        .join("");
+
+      document.getElementById("diagDetailsBox").innerHTML = `
+        <div style="margin-bottom:6px;"><strong>Indicadores:</strong> ${escapeHtml(item.indicadores)}</div>
+        <div><strong>Descartar:</strong> ${escapeHtml(item.descartar)}</div>
+      `;
+
+      document.getElementById("diagStrategiesList").innerHTML = item.estrategias
+        .map((st, idx) => {
+          const checked = state.selectedStrategies.includes(st) ? "checked" : "";
+          return `
+            <label class="check-option">
+              <input type="checkbox" data-strat-check="${idx}" ${checked} />
+              <span>${escapeHtml(st)}</span>
+            </label>
+          `;
+        })
+        .join("");
+
+      document.querySelectorAll("[data-diag-chip]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          state.selectedDiagKey = btn.dataset.diagChip;
+          state.selectedStrategies = [...CATALOGO[state.selectedDiagKey].estrategias];
+          renderDiagModalContent();
+        });
+      });
+
+      document.querySelectorAll("[data-strat-check]").forEach((chk) => {
+        chk.addEventListener("change", () => {
+          const idx = Number(chk.dataset.stratCheck);
+          const stratText = item.estrategias[idx];
+          if (chk.checked) {
+            if (!state.selectedStrategies.includes(stratText)) {
+              state.selectedStrategies.push(stratText);
+            }
+          } else {
+            state.selectedStrategies = state.selectedStrategies.filter((s) => s !== stratText);
+          }
+        });
+      });
+    }
+
+    document.getElementById("caseSelect").addEventListener("change", (e) => {
+      state.currentCaseId = e.target.value;
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("btnNewCase").addEventListener("click", () => {
+      const newCase = createEmptyCase("Sin nombre");
+      state.cases.unshift(newCase);
+      state.currentCaseId = newCase.id;
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("btnDeleteCase").addEventListener("click", () => {
+      if (state.cases.length === 1) {
+        const fresh = createEmptyCase("Sin nombre");
+        state.cases = [fresh];
+        state.currentCaseId = fresh.id;
+      } else {
+        state.cases = state.cases.filter((c) => c.id !== state.currentCaseId);
+        state.currentCaseId = state.cases[0].id;
+      }
+      saveState();
+      renderAll();
+    });
+
+    document.getElementById("btnExportJson").addEventListener("click", () => {
+      const c = getCurrentCase();
+      const blob = new Blob([JSON.stringify(c, null, 2)], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      const safeName = (c.name || "caso_bellacan").toLowerCase().replace(/[^a-z0-9]+/gi, "_");
+      a.href = url;
+      a.download = `${safeName}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+    });
+
+    document.getElementById("btnImportTrigger").addEventListener("click", () => {
+      document.getElementById("importFileInput").click();
+    });
+
+    document.getElementById("importFileInput").addEventListener("change", (e) => {
+      const file = e.target.files && e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        try {
+          const imported = JSON.parse(ev.target.result);
+          if (imported && typeof imported === "object") {
+            imported.id = "case_" + Date.now();
+            imported.name = imported.name || "Caso importado";
+            state.cases.unshift(imported);
+            state.currentCaseId = imported.id;
+            saveState();
+            renderAll();
+          }
+        } catch (err) {
+          alert("El archivo seleccionado no es un JSON válido.");
+        }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+
+    const triggerPrint = () => window.print();
+    document.getElementById("btnPrintTop").addEventListener("click", triggerPrint);
+    document.getElementById("btnPrintBar").addEventListener("click", triggerPrint);
+
+    document.querySelectorAll(".tab-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const c = getCurrentCase();
+        c.activeTab = btn.dataset.tab;
+        saveState();
+        renderAll();
+      });
+    });
+
+    document.getElementById("btnOpenDiagModal").addEventListener("click", openDiagModal);
+    document.getElementById("btnCloseDiagModal").addEventListener("click", closeDiagModal);
+    document.getElementById("diagModal").addEventListener("click", (e) => {
+      if (e.target.id === "diagModal") closeDiagModal();
+    });
+
+    document.getElementById("btnConfirmAddDiag").addEventListener("click", () => {
+      const c = getCurrentCase();
+      c.diagnosticos.push({
+        id: "diag_" + Date.now(),
+        categoria: state.selectedDiagKey,
+        estrategias: [...state.selectedStrategies]
+      });
+      c.activeTab = "mapa";
+      saveState();
+      closeDiagModal();
+      renderAll();
+    });
+
+    loadState();
+    renderAll();
+  </script>
+</body>
+</html>
